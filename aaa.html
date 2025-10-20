@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECRET-LET'S UNBOX NOW!</title>
+<link href="https://fonts.googleapis.com/css2?family=Queenside&display=swap" rel="stylesheet">
+<style>
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, #ffb6b6, #ff5a5a);
+    font-family: 'Queenside', serif;
+    overflow: hidden;
+  }
+
+  .gift-scene {
+    position: relative;
+    width: 300px;
+    height: 220px;
+    perspective: 900px;
+    cursor: pointer;
+  }
+
+  .gift-box {
+    width: 100%;
+    height: 100%;
+    background: #d62828;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    transform-origin: center bottom;
+    transition: transform 0.8s cubic-bezier(.2,.8,.3,1);
+  }
+
+  .gift-lid {
+    position: absolute;
+    left: -5px;
+    top: -55px;
+    width: 310px;
+    height: 65px;
+    background: #e63946;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: transform 0.8s cubic-bezier(.2,.9,.3,1);
+    transform-origin: right bottom;
+    z-index: 5;
+  }
+
+  .ribbon-v {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: #ffd60a;
+    transform: translateX(-50%);
+    border-radius: 6px;
+  }
+
+  .ribbon-h {
+    position: absolute;
+    top: 35%;
+    left: 0;
+    right: 0;
+    height: 35px;
+    background: #ffd60a;
+    border-radius: 8px;
+  }
+
+  .lock-btn {
+    position: absolute;
+    left: 50%;
+    top: -20px;
+    transform: translate(-50%, 50%);
+    width: 68px;
+    height: 68px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .lock-btn svg {
+    width: 100%;
+    height: 100%;
+    fill: #9c8010;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+  }
+
+  .letter {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 50px) scale(0.5);
+    width: 80%;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: all 0.6s ease;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .letter.show {
+    opacity: 1;
+    transform: translate(-80%, -50%) scale(0.5);
+  }
+
+  .drag-hint {
+    position: absolute;
+    top: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: rgba(0,0,0,0.35);
+    pointer-events: none;
+  }
+
+  .open .gift-lid {
+    transform: translateX(120px) rotateZ(25deg);
+  }
+
+  .modal-back {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-back.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+  }
+
+  input {
+    padding: 10px;
+    width: 80%;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  button.ok {
+    background: #d62828;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  @keyframes shake {
+    20%, 80% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+  }
+  .shake { animation: shake 0.4s; }
+</style>
+</head>
+<body>
+  <div class="gift-scene" id="scene">
+    <div class="gift-box" id="box">
+      <div class="gift-lid" id="lid"></div>
+      <div class="ribbon-v"></div>
+      <div class="ribbon-h"></div>
+      <div class="lock-btn" id="lockBtn">
+        <svg viewBox="0 0 64 64">
+          <path d="M48 28h-1v-8a15 15 0 0 0-30 0v8h-1a4 4 0 0 0-4 4v24a4 4 0 0 0 4 4h32a4 4 0 0 0 4-4V32a4 4 0 0 0-4-4ZM22 20a10 10 0 0 1 20 0v8H22Zm10 26a4 4 0 1 1 4-4 4 4 0 0 1-4 4Z"/>
+        </svg>
+      </div>
+      <div class="letter" id="letter">
+        <div class="drag-hint">:></div>
+        <div style="font-weight:700;margin-bottom:4px">Dearr Ms.Dung</div>
+        <div>Tụi em chúc cô 20/10 vui vẻe, luôn mạnh khỏe, vui vẻ và ngày càng xinhh!</div>
+        <div></div>
+        <div>         # plap, tthao, memeee</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-back" id="modal">
+    <div class="modal">
+      <h3>🔐 Nhập mật khẩu để mở khóa</h3>
+      <input id="pwInput" type="password" placeholder="Nhập mật khẩu..."/>
+      <br/>
+      <button class="ok" id="pwOk">OK</button>
+    </div>
+  </div>
+
+<script>
+const PASSWORD = '@PDung';
+const lockBtn = document.getElementById('lockBtn');
+const modal = document.getElementById('modal');
+const pwInput = document.getElementById('pwInput');
+const pwOk = document.getElementById('pwOk');
+const box = document.getElementById('box');
+const lid = document.getElementById('lid');
+const letter = document.getElementById('letter');
+let isLocked = true;
+let isOpened = false;
+
+function showModal() {
+  modal.classList.add('show');
+  pwInput.value = '';
+  pwInput.focus();
+}
+function hideModal() {
+  modal.classList.remove('show');
+}
+
+lockBtn.onclick = (e) => {
+  e.stopPropagation();
+  if (isLocked) showModal();
+  else {
+    isLocked = true;
+    isOpened = false;
+    box.classList.remove('open');
+    letter.classList.remove('show');
+  }
+};
+
+pwOk.onclick = () => {
+  const val = pwInput.value.trim();
+  if (val === PASSWORD) {
+    hideModal();
+    isLocked = false;
+    lockBtn.style.display = 'none';
+  } else {
+    pwInput.classList.add('shake');
+    setTimeout(() => pwInput.classList.remove('shake'), 400);
+    pwInput.value = '';
+  }
+};
+
+box.onclick = () => {
+  if (isLocked) {
+    box.classList.add('shake');
+    setTimeout(() => box.classList.remove('shake'), 400);
+    return;
+  }
+  if (!isOpened) {
+    isOpened = true;
+    box.classList.add('open');
+    letter.style.transform = 'translate(-50%, 10px) scale(2)'; // nhú lên 1 chút
+    setTimeout(() => {
+      letter.classList.add('show');
+    }, 500); // rồi mới bay lên
+  } else {
+    isOpened = false;
+    box.classList.remove('open');
+    letter.classList.remove('show');
+    letter.style.transform = 'translate(-50%, 50px) scale(2)';
+  }
+};
+
+window.onkeydown = (e) => {
+  if (e.key === 'Escape') hideModal();
+};
+</script>
+</body>
+</html>
